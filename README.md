@@ -2,6 +2,7 @@ Screwdriver Redo
 ================
 
 Screwdriver Redo By TenPlus1 with adjustable wear
+-------------------------------------------------
 
 To adjust the wear, write a value between 0 and 65535 after wear_set_by_user in <modpath>/screwdriver.conf .
 If you entered an invalid value or if the file doesn't exist, a new one with a default value of 300 is (re)created.
