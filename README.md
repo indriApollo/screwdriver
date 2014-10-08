@@ -5,7 +5,7 @@ Screwdriver Redo By TenPlus1 with adjustable wear
 
 Minetest mod: screwdriver
 Edited by TenPlus1 on 2nd Sep 2014
-==================================
+----------------------------------
 
 License of source code:
 -----------------------
