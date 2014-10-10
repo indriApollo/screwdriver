@@ -9,11 +9,11 @@ end
 local function read_wear_user()
 	--read wear from file
 	local wear_set_by_user
-
-	local conf_file = io.open("screwdriver.cfg", "r")
+	local mod_path = minetest.get_modpath("screwdriver")
+	local conf_file = io.open(mod_path.."/screwdriver.conf", "r")
 	    if conf_file == nil then
 	          --file does not exist or can't be read
-	      conf_file = io.open("screwdriver.cfg", "a")
+	      conf_file = io.open(mod_path.."/screwdriver.conf", "a")
 	      conf_file:write("wear_set_by_user = 300")  --write a default value
 	      wear_set_by_user = 300
 
@@ -21,7 +21,7 @@ local function read_wear_user()
 	    	conf_file:seek(set,19)
 	    	wear_set_by_user = tonumber(conf_file:read("*all"))
 		      if wear_set_by_user == nil or wear_set_by_user < 0 or wear_set_by_user > 65535 then
-		          conf_file = io.open("screwdriver.cfg", "w")
+		          conf_file = io.open(mod_path.."/screwdriver.conf", "w")
 		          conf_file:write("wear_set_by_user = 300")   --write a default value
 		          wear_set_by_user = 300
 		      end
@@ -80,16 +80,17 @@ local function screwdriver_handler(itemstack, user, pointed_thing, mode, wear_se
 end
 
 -- Screwdriver
+
+local wear = read_wear_user()
+
 minetest.register_tool("screwdriver:screwdriver", {
-	description = "ScrewdriverDEV (left-click rotates face, right-click rotates axis)",
+	description = "Screwdriver (left-click rotates face, right-click rotates axis)",
 	inventory_image = "screwdriver.png",
 	on_use = function(itemstack, user, pointed_thing)
-		local wear = read_wear_user()
 		screwdriver_handler(itemstack, user, pointed_thing, 1, wear)
 		return itemstack
 	end,
 	on_place = function(itemstack, user, pointed_thing)
-		local wear = read_wear_user()
 		screwdriver_handler(itemstack, user, pointed_thing, 3, wear)
 		return itemstack
 	end,
