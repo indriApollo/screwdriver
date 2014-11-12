@@ -8,27 +8,19 @@ end
 
 local function read_wear_user()
 	--read wear from file
-	local wear_set_by_user
 	local mod_path = minetest.get_modpath("screwdriver")
-	local conf_file = io.open(mod_path.."/screwdriver.conf", "r")
-	    if conf_file == nil then
-	          --file does not exist or can't be read
-	      conf_file = io.open(mod_path.."/screwdriver.conf", "a")
-	      conf_file:write("wear_set_by_user = 300")  --write a default value
-	      wear_set_by_user = 300
-
-	    else
-	    	conf_file:seek(set,19)
-	    	wear_set_by_user = tonumber(conf_file:read("*all"))
-		      if wear_set_by_user == nil or wear_set_by_user < 0 or wear_set_by_user > 65535 then
-		          conf_file = io.open(mod_path.."/screwdriver.conf", "w")
-		          conf_file:write("wear_set_by_user = 300")   --write a default value
-		          wear_set_by_user = 300
-		      end
-	      
-	    end
-	io.close(conf_file)
-
+	local conf_file = Settings(mod_path.."/screwdriver.conf")
+	if not conf_file then
+		minetest.log("error","[screwdriver]Can't access/create '"..mod_path.."/screwdriver.conf' .")
+		return 0 -- use default value
+	end
+	local wear_set_by_user = tonumber(conf_file:get("wear_set_by_user")) -- gives nil if not a number
+	if not wear_set_by_user or wear_set_by_user < 0 or wear_set_by_user > 65535 then
+		minetest.log("error","[screwdriver]Invalid wear value, using default.")
+		wear_set_by_user = 0 -- use default value
+		conf_file:set("wear_set_by_user",0)
+		conf_file:write()
+	end
 	return wear_set_by_user
 end
 
